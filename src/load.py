@@ -18,6 +18,7 @@ Fuentes soportadas:
 
 from collections import defaultdict
 from pathlib import Path
+import re
 
 import pandas as pd
 from langchain_community.document_loaders import PyPDFLoader
@@ -195,6 +196,32 @@ def cargar_tarifas_xlsx(ruta: Path) -> list[Document]:
 
     return documentos
 
+# ---------------------------------------------------------------------------
+# Limpieza de texto (antes del chunking)
+# ---------------------------------------------------------------------------
+
+
+def normalizar_texto(texto: str) -> str:
+    """Deja el texto listo para fragmentar: menos ruido, mismas frases."""
+    if not texto:
+        return ""
+
+    t = texto.replace("\r\n", "\n").replace("\r", "\n")
+    t = re.sub(r"\n{3,}", "\n\n", t)  # no más de una línea en blanco seguida
+    t = re.sub(r"[ \t]+", " ", t)  # espacios/tabs repetidos -> uno solo
+    t = "\n".join(linea.strip() for linea in t.split("\n"))
+    return t.strip()
+
+
+def limpiar_documentos(documentos: list[Document]) -> list[Document]:
+    """Aplica normalizar_texto a cada documento; omite los que quedan vacíos."""
+    limpios: list[Document] = []
+    for doc in documentos:
+        contenido = normalizar_texto(doc.page_content)
+        if not contenido:
+            continue
+        limpios.append(Document(page_content=contenido, metadata=dict(doc.metadata)))
+    return limpios
 
 # ---------------------------------------------------------------------------
 # CSV de descuentos (110k+ filas de USO -> se agrega, no se chunkea fila a fila)
