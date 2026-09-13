@@ -7,7 +7,7 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # --- Modelos ---
-EMBEDDING_MODEL = "models/embedding-001"
+EMBEDDING_MODEL ="gemini-embedding-001"
 GENERATION_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.0
 
@@ -36,3 +36,9 @@ CSV_CENTROS = {
 }
 XLSX_TARIFAS = "300083-10-deportes-tarifas.xlsx"
 CSV_DESCUENTOS = "300097-3-deportes-descuentos-csv.csv"
+
+# --- Salida del pipeline offline (embed.py) ---
+OUTPUT_DIR = "output"
+CHUNKS_JSON = "output/chunks.json"
+EMBEDDINGS_JSON = "output/embeddings.json"
+EMBED_BATCH_SIZE = 90  # nº de textos por llamada a la API de embeddings
