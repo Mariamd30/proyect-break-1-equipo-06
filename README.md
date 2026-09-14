@@ -2,6 +2,15 @@
 
 Asistente RAG sobre instalaciones, tarifas y normas del deporte municipal de Madrid.
 
+| Requiere API key | No — corre en tu máquina |
+
+Es multilingüe (funciona bien en español) y no depende de cuota ni de red
+una vez descargado el modelo (~470 MB, solo la primera vez).
+
+**Resultado medido:** los mismos 1712 chunks que con Gemini no lograban
+completarse en una sesión, con HF local se procesaron en **63 segundos**
+(54 lotes de ~32 textos, ~1.18s/lote de media).
+
 ## Instalación
 
 ~~~bash
