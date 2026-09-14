@@ -7,7 +7,7 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # --- Modelos ---
-EMBEDDING_MODEL ="gemini-embedding-001"
+EMBEDDING_MODEL ="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"  # local (HF); antes: Gemini
 GENERATION_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.0
 
@@ -41,4 +41,5 @@ CSV_DESCUENTOS = "300097-3-deportes-descuentos-csv.csv"
 OUTPUT_DIR = "output"
 CHUNKS_JSON = "output/chunks.json"
 EMBEDDINGS_JSON = "output/embeddings.json"
-EMBED_BATCH_SIZE = 90  # nº de textos por llamada a la API de embeddings
+EMBED_BATCH_SIZE = 32  # nº de textos por lote al codificar en local (sentence-transformers)
+PAUSE_BETWEEN_BATCHES = 2
