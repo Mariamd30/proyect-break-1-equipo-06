@@ -7,7 +7,7 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # --- Modelos ---
-EMBEDDING_MODEL = "models/embedding-001"
+EMBEDDING_MODEL ="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"  # local (HF); antes: Gemini
 GENERATION_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.0
 
@@ -22,3 +22,24 @@ MAX_CHUNKS = 5
 # --- Paths ---
 DATA_DIR = "data"
 CHROMA_DIR = "chroma"
+
+# --- Ingesta ---
+# Ficheros del corpus "Deporte municipal": los tres CSV de centros comparten
+# idéntico esquema de columnas; el XLSX de tarifas y el CSV de descuentos
+# necesitan trato distinto (ver load.py).
+EXTENSIONES_PDF = {".pdf"}
+
+CSV_CENTROS = {
+    "200186-0-polideportivos-csv.csv": "polideportivo",
+    "200215-0-instalaciones-deportivas-csv.csv": "instalacion_basica",
+    "210227-0-piscinas-publicas-csv.csv": "piscina",
+}
+XLSX_TARIFAS = "300083-10-deportes-tarifas.xlsx"
+CSV_DESCUENTOS = "300097-3-deportes-descuentos-csv.csv"
+
+# --- Salida del pipeline offline (embed.py) ---
+OUTPUT_DIR = "output"
+CHUNKS_JSON = "output/chunks.json"
+EMBEDDINGS_JSON = "output/embeddings.json"
+EMBED_BATCH_SIZE = 32  # nº de textos por lote al codificar en local (sentence-transformers)
+PAUSE_BETWEEN_BATCHES = 2

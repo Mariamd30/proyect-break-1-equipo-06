@@ -3,3 +3,9 @@ langchain-google-genai
 chromadb
 streamlit
 python-dotenv
+langchain-community
+langchain-text-splitters
+pandas
+openpyxl
+pypdf
+sentence-transformers
