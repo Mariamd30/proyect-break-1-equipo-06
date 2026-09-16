@@ -21,8 +21,18 @@
 - Observaciones:
 
 ## 3. Retrieval — observación con 2 valores de K
-- K=3 vs K=5:
-- Observaciones:
+Query de prueba: "¿Cuánto cuesta el abono de piscina?"
+
+- **K=3**: los 3 resultados son variantes del mismo servicio (ENTRADA PISCINA
+  DE VERANO, distintas categorías de edad), scores muy juntos (0.71-0.73).
+  Redundante: no aporta información más allá del primer resultado.
+- **K=5**: añade 1 resultado nuevo (ENTRADA PISCINA CUBIERTA), con una caída
+  de score notable (0.58 vs 0.69 del anterior) — servicio distinto pero
+  claramente menos relevante para la query literal.
+- **Observación general**: aumentar K no diversifica demasiado en corpus con
+  muchas filas casi idénticas (misma tarifa por categoría de edad) que
+  compiten por los primeros puestos — el cuello de botella no es K, es la
+  redundancia estructural del CSV/XLSX de tarifas.
 
 ## 4. Generación
 - 1 acierto in-corpus:
@@ -44,7 +54,19 @@
    Gemini (posible pérdida de matiz semántico, no cuantificada). La
    generación de respuestas sigue usando Gemini; solo cambió la fase de
    embeddings. Más detalle en el apéndice.
-2.
+2. **El retriever no encuentra el "Abono Deporte Madrid" al preguntar por
+   el precio del abono de piscina.** Con la query "¿Cuánto cuesta el abono
+   de piscina?", el chunk más relevante real (`CUOTA MENSUAL ABONO DEPORTE
+   MADRID USO LIBRE`) aparece en el puesto **728 de 1712** (score 0.199) —
+   muy lejos de cualquier K razonable. Con K=3, K=5 o incluso K=20 solo se
+   recuperan variantes de "ENTRADA PISCINA DE VERANO/CUBIERTA" (entradas
+   sueltas, no abonos), con scores entre 0.5 y 0.73. Causa: el texto del
+   "Abono" no contiene la palabra "piscina" (es un abono general a
+   instalaciones deportivas), mientras el modelo de embeddings da mucho
+   peso al término literal "piscina", presente en cientos de chunks de
+   menor relevancia real. Próximo paso: enriquecer el texto/metadata de
+   los servicios "Abono" con sinónimos o categorías relacionadas (p. ej.
+   "incluye acceso a piscina") para mejorar el matching semántico.
 3.
 
 ## Próximos pasos
