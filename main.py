@@ -11,11 +11,29 @@ def main():
     args = parser.parse_args()
 
     if args.index:
-        print("TODO: indexar corpus")
+        from src.load import cargar_documentos
+        from src.chunk import fragmentar_documentos
+        from src.embed import ejecutar_embeddings
+        from src.index import construir_indice
+
+        docs = cargar_documentos()
+        chunks = fragmentar_documentos(docs)
+        ejecutar_embeddings(chunks)
+        construir_indice()
+
     elif args.query:
-        print(f"TODO: retrieval para: {args.query}")
+        from src.retrieve import retrieve
+        from config import TOP_K
+
+        k = args.k or TOP_K
+        resultados = retrieve(args.query, k=k)
+        for i, r in enumerate(resultados, 1):
+            print(f"\n--- Chunk {i} (source: {r['source']}, score: {r['score']:.3f}) ---")
+            print(r["text"][:300])
+
     elif args.ask:
         print(f"TODO: RAG completo para: {args.ask}")
+
     else:
         parser.print_help()
 
