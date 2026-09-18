@@ -8,7 +8,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # --- Modelos ---
 EMBEDDING_MODEL ="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"  # local (HF); antes: Gemini
-GENERATION_MODEL = "gemini-1.5-flash"
+GENERATION_MODEL = "gemini-3.1-flash-lite"
 TEMPERATURE = 0.0
 
 # --- Chunking ---
