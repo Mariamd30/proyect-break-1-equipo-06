@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 RUTA_LOG = Path("output/retrieval_log.jsonl")
+RUTA_LOG_GENERACION = Path("output/generacion_log.jsonl")
 
 
 def log_query(pregunta: str, k: int, n_chunks: int, tiempo: float, modelo: str):
@@ -21,4 +22,30 @@ def log_query(pregunta: str, k: int, n_chunks: int, tiempo: float, modelo: str):
 
     RUTA_LOG.parent.mkdir(parents=True, exist_ok=True)
     with RUTA_LOG.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entrada, ensure_ascii=False) + "\n")
+
+
+def log_generacion(pregunta: str, resultado: dict):
+    """Registra en consola y en output/generacion_log.jsonl el resultado completo de responder()."""
+    entrada = {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "pregunta": pregunta,
+        "k": resultado["k"],
+        "n_chunks": resultado["n_chunks"],
+        "tiempo_segundos": resultado["tiempo_segundos"],
+        "modelo": resultado["modelo"],
+        "abstencion": resultado["abstencion"],
+        "error": resultado["error"],
+    }
+    if resultado["error"]:
+        estado = f"error={resultado['error']}"
+    else:
+        estado = f"abstencion={'sí' if resultado['abstencion'] else 'no'}"
+    print(
+        f"[log] generacion k={resultado['k']} chunks={resultado['n_chunks']} "
+        f"tiempo={resultado['tiempo_segundos']:.2f}s modelo={resultado['modelo']} {estado} | \"{pregunta}\""
+    )
+
+    RUTA_LOG_GENERACION.parent.mkdir(parents=True, exist_ok=True)
+    with RUTA_LOG_GENERACION.open("a", encoding="utf-8") as f:
         f.write(json.dumps(entrada, ensure_ascii=False) + "\n")

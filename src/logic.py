@@ -5,6 +5,7 @@ from pathlib import Path
 
 from config import GENERATION_MODEL, TOP_K
 from src.generate import generar_respuesta
+from src.logging_utils import log_generacion
 from src.prompts import construir_prompt, es_abstencion, formatear_contexto
 from src.retrieve import retrieve
 
@@ -42,7 +43,7 @@ def responder(pregunta: str, k: int | None = None) -> dict:
         except Exception as e:
             error = f"Error al procesar la pregunta: {e}"
 
-    return {
+    resultado = {
         "respuesta": respuesta,
         "abstencion": es_abstencion(respuesta),
         "contexto": contexto,
@@ -54,6 +55,8 @@ def responder(pregunta: str, k: int | None = None) -> dict:
         "modelo": GENERATION_MODEL,
         "error": error,
     }
+    log_generacion(pregunta, resultado)
+    return resultado
 
 
 def rag_ask(consulta: str) -> str:
