@@ -1,4 +1,31 @@
+"""Punto de entrada — RAG Deporte municipal.
+
+Uso:
+  python main.py --index
+  python main.py --query "¿Cuánto cuesta el abono de piscina?"
+  python main.py --ask "¿Cuánto cuesta la entrada a la piscina de verano para adultos?"
+  python main.py --ask "..." --k 5
+  streamlit run app.py
+"""
+
 import argparse
+
+
+def _cmd_ask(pregunta: str, k: int | None) -> None:
+    from src.logic import responder
+
+    resultado = responder(pregunta, k=k)
+    if resultado["error"]:
+        print(f"\nERROR: {resultado['error']}")
+        return
+
+    print(f"\n{resultado['respuesta']}")
+    if resultado["abstencion"]:
+        print("\n(El sistema se ha abstenido: no hay evidencia suficiente en los documentos.)")
+    else:
+        print("\nFuentes:")
+        for fuente in resultado["fuentes"]:
+            print(f"  - {fuente}")
 
 
 def main():
@@ -32,7 +59,7 @@ def main():
             print(r["text"][:300])
 
     elif args.ask:
-        print(f"TODO: RAG completo para: {args.ask}")
+        _cmd_ask(args.ask, args.k)
 
     else:
         parser.print_help()
