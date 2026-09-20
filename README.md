@@ -174,4 +174,24 @@ rag_ask("¿Cuál es el horario de taquilla de un centro?")  # solo texto, pensad
 
 ## Fuentes del corpus
 
-(completar con enlaces y fecha de descarga)
+Datos abiertos y documentos oficiales del Ayuntamiento de Madrid sobre deporte municipal.
+Los originales están en `data/`.
+
+### Datos estructurados (CSV/XLSX), datos.madrid.es
+
+| Fichero | Contenido | Enlace |
+|---|---|---|
+| `200186-0-polideportivos-csv.csv` | Polideportivos | [Ficha](https://datos.madrid.es/dataset/200186-0-polideportivos) |
+| `200215-0-instalaciones-deportivas-csv.csv` | Instalaciones deportivas básicas | [Ficha](https://datos.madrid.es/dataset/200215-0-instalaciones-deportivas) |
+| `210227-0-piscinas-publicas-csv.csv` | Piscinas municipales | [Ficha](https://datos.madrid.es/dataset/210227-0-piscinas-publicas) |
+| `300083-10-deportes-tarifas.xlsx` | Tarifas de instalaciones deportivas | [Ficha](https://datos.madrid.es/dataset/300083-0-deportes-tarifas) |
+| `300097-3-deportes-descuentos-csv.csv` | Descuentos en instalaciones | [Ficha](https://datos.madrid.es/dataset/300097-0-deportes-descuentos) |
+
+### Documentos (PDF)
+
+| Fichero | Contenido | Enlace |
+|---|---|---|
+| `PreciosPublicos2026.pdf` | Precios públicos 2026 (Acuerdo Plenario 22/12/2010, mod. dic. 2025) | [madrid.es](https://www.madrid.es/UnidadesDescentralizadas/Deportes/Colecciones/ficheros/TarifasD/PreciosPublicos2026.pdf) |
+| `Tarifas_deportivas.pdf` | Tarifas de servicios en centros deportivos (copia de precios 2025, mod. 23/12/2024) | [madrid.es](https://www.madrid.es/UnidadesDescentralizadas/Deportes/Colecciones/ficheros/TarifasD/Tarifas_deportivas.pdf) |
+| `eli-es-md-01860896-reg-2012-10-15-_1_-dof-spa.pdf` | Reglamento de utilización de instalaciones y servicios deportivos municipales (26/09/2012) | [sede.madrid.es](https://sede.madrid.es/eli/es-md-01860896/reg/2012/10/15/%281%29/dof/spa/pdf) |
+| `20250912_InfografíaCómoAdquirirOrenovarUnADM.pdf` | Infografía: alta y renovación online del Abono Deporte Madrid (12/09/2025) | [madrid.es](https://www.madrid.es/UnidadesDescentralizadas/Deportes/Faq/ficheros/infografias%20faq%202025/20250912_Infograf%C3%ADaC%C3%B3moAdquirirOrenovarUnADM.pdf) |
