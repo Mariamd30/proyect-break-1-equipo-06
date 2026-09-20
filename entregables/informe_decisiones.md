@@ -35,8 +35,52 @@ Query de prueba: "¿Cuánto cuesta el abono de piscina?"
   redundancia estructural del CSV/XLSX de tarifas.
 
 ## 4. Generación
-- 1 acierto in-corpus:
-- 1 abstención fuera de corpus:
+
+Modelo `gemini-3.1-flash-lite` (temperatura 0.0), prompt con secciones delimitadas
+(instrucciones / `CONTEXTO RECUPERADO` / `PREGUNTA`) y una frase fija de abstención
+("No tengo información suficiente en los documentos para responder a esa pregunta.").
+Evaluado con las 13 preguntas de `queries/preguntas_eval.json` (10 dentro del corpus y
+3 fuera) con `python main.py --eval` (k=3 por defecto) y `python main.py --eval --k 5`.
+
+- **1 acierto in-corpus:** "¿Cuánto cuesta la entrada a la piscina de verano para adultos?"
+  → "La entrada para adultos cuesta 4.5 € (Fuente: 300083-10-deportes-tarifas.xlsx)."
+  El fragmento correcto se recupera con k=3 (el valor por defecto), la respuesta cita la
+  fuente y no añade datos que no estén en el contexto.
+- **1 abstención fuera de corpus:** "¿Cuál es la capital de Francia?" → frase de abstención.
+  También se abstiene en una pregunta cercana al dominio ("¿Cuánto cuesta el abono mensual
+  de transporte público en Madrid?", aunque el corpus tiene tarifas de "abono" deportivo)
+  y en "¿Quién ganó el último Mundial de fútbol?": 3/3 fuera de corpus, con k=3 y k=5.
+
+Resultados de la evaluación (revisión manual de la salida de cada ejecución):
+
+| | k=3 | k=5 |
+|---|---|---|
+| Abstención correcta (`se_abstuvo` = `deberia_abstenerse`, 13 preguntas) | 7/13 | 8/13 |
+| Fuente esperada entre las fuentes devueltas (10 in-corpus) | 9/10 | 10/10 |
+| Respuesta correcta según la esperada (10 in-corpus) | 4/10 | 5/10 |
+| Errores de API | 0 | 0 |
+
+La fuente se comprueba por fichero, no por fragmento: 5 de las 10 preguntas in-corpus esperan
+el mismo `300083-10-deportes-tarifas.xlsx`, así que ese fichero aparece entre las fuentes aunque
+el fragmento concreto no haya llegado. Por eso este criterio es mucho más alto que el acierto
+de respuesta.
+
+Observaciones:
+
+- **El modelo no inventó en ninguna ejecución:** todos los fallos dentro del corpus son
+  abstenciones, nunca respuestas falsas. El prompt restrictivo hace su trabajo.
+- **El cuello de botella es el retrieval, no el modelo.** En las 5 preguntas in-corpus que
+  siguen sin respuesta con k=5, el fragmento correcto no llega al contexto: q3 (cuota del Abono
+  Deporte Madrid para adultos) está en la posición 17 del ranking, q4 (horario de taquilla de
+  un centro) en la 20-21, q8 (descuentos por edad mayor) en la 19 y q7 (requisitos de reserva
+  de temporada) fuera del top 30. Con `MAX_CHUNKS = 5` ninguno es alcanzable subiendo k. Además,
+  q10 ("abono de piscina") es el fallo del apartado 5 (el Abono Deporte Madrid no se recupera).
+- **Causas concretas.** Los abonos y las tarifas tienen un fragmento casi idéntico por cada
+  categoría de edad, que compiten entre sí (q3). En las fichas de los centros el nombre queda
+  en un fragmento y el horario en otro, que solo lleva la dirección (q4).
+- **k importa en generación:** q9 ("reducción para desempleados en la piscina cubierta") solo se
+  responde con k=5. Con k≤3 llegan los fragmentos de la piscina de verano, no los de la cubierta,
+  y el modelo se abstiene correctamente porque el contexto no responde a lo preguntado.
 
 ## 5. Fallos conocidos (3) y próximos pasos
 
